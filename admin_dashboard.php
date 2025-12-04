@@ -146,41 +146,62 @@ if ($result && $result->num_rows > 0) {
         <div class="content" id="add" style="display: none">
             <h2>Add New Senior Citizen</h2>
             <form id="seniorForm" method="POST" action="assets/backend/add_senior.php">
-                <input type="text" name="full_name" placeholder="Full Name" required />
-                <input type="text" name="age" placeholder="Age" required />
-                <input type="text" name="address" placeholder="Address" required />
-                <input type="tel" name="contact" placeholder="Contact Number" required />
-                <input type="date" name="birthdate" placeholder="Date of Birth" required />
+                <fieldset>
+                    <legend>Senior Citizen Information</legend>
+                    <input type="text" name="full_name" placeholder="Full Name" required />
+                    <input type="text" name="age" placeholder="Age" required />
+                    <input type="text" name="address" placeholder="Address" required />
+                    <input type="tel" name="contact_number" placeholder="Contact Number" required />
+                    <label for="birthdate">Date of Birth</label>
+                    <input id="birthdate" type="date" name="birthdate" title="Format: YYYY-MM-DD" required />
 
-                <select name="gender" required>
-                    <option value="">Choose Gender</option>
-                    <option value="Male">Male</option>
-                    <option value="Female">Female</option>
-                    <option value="Prefer not to say">Prefer not to say</option>
-                </select>
+                    <select name="gender" required>
+                        <option value="">Choose Gender</option>
+                        <option value="Male">Male</option>
+                        <option value="Female">Female</option>
+                        <option value="Prefer not to say">Prefer not to say</option>
+                    </select>
 
-                <select name="civil_status" required>
-                    <option value="">Choose Civil Status</option>
-                    <option value="Single">Single</option>
-                    <option value="Married">Married</option>
-                    <option value="Separated">Separated</option>
-                    <option value="Widowed">Widowed</option>
-                </select>
+                    <select name="civil_status" required>
+                        <option value="">Choose Civil Status</option>
+                        <option value="Single">Single</option>
+                        <option value="Married">Married</option>
+                        <option value="Separated">Separated</option>
+                        <option value="Widowed">Widowed</option>
+                    </select>
+                </fieldset>
+
+                <fieldset>
+                    <legend>Emergency Contact Information</legend>
+                    <input type="text" name="contact_person" placeholder="Contact Person Name" />
+                    <input type="tel" name="contact_person_number" placeholder="Contact Person Number" />
+
+                    <select name="contact_person_relation" required>
+                        <option value="">Choose Relation to Senior</option>
+                        <option value="Spouse">Spouse</option>
+                        <option value="Parent">Parent</option>
+                        <option value="Child">Child</option>
+                        <option value="Sibling">Sibling</option>
+                        <option value="Grandparent">Grandparent</option>
+                        <option value="Aunt/Uncle">Aunt/Uncle</option>
+                        <option value="Cousin">Cousin</option>
+                    </select>
+                </fieldset>
 
                 <button type="button" id="enrollBio">Register Fingerprint</button>
 
                 <button type="submit">Register</button>
-                </form>
-                <div id="confirmModal" class="modal" style="display:none;">
-                    <div class="modal-content">
-                        <h3>Confirm Registration</h3>
-                        <p>Are you sure you want to register this senior citizen?</p>
-                        <div class="modal-actions">
-                            <button id="confirmSubmit" class="confirm">Yes, Register</button>
-                            <button id="cancelSubmit" class="cancel">Cancel</button>
-                        </div>
+            </form>
+            <div id="confirmModal" class="modal" style="display:none;">
+                <div class="modal-content">
+                    <h3>Confirm Registration</h3>
+                    <p>Are you sure you want to register this senior citizen?</p>
+                    <div class="modal-actions">
+                        <button id="confirmSubmit" class="confirm">Yes, Register</button>
+                        <button id="cancelSubmit" class="cancel">Cancel</button>
                     </div>
                 </div>
+            </div>
         </div>
 
         <div class="content" id="list" style="display: none">

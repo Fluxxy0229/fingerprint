@@ -1,4 +1,3 @@
-/* Hero Banner */
 .hero-banner {
     margin: 24px 20px;
     padding: 34px;
@@ -17,7 +16,6 @@
     opacity: 0.9;
 }
 
-/* Stats Cards Container */
 .stats-cards {
     display: flex;
     gap: 20px;
@@ -25,14 +23,12 @@
     margin: 10px 20px;
 }
 
-/* Content Sections */
 .content#process,
 .content#logs {
     display: none;
     padding: 20px;
 }
 
-/* Table Alignment */
 table tbody tr td {
     text-align: left;
 }
@@ -41,7 +37,6 @@ table tbody tr td[style*="text-align:center"] {
     text-align: center;
 }
 
-/* Discount Form Section */
 .discount-form-section {
     background: #f8f9fa;
     padding: 25px;
@@ -91,7 +86,6 @@ table tbody tr td[style*="text-align:center"] {
     margin-top: 3px;
 }
 
-/* Buttons */
 .btn-primary,
 .btn-secondary,
 .btn-scan {
@@ -137,7 +131,6 @@ table tbody tr td[style*="text-align:center"] {
     background: #218838;
 }
 
-/* Verification Options */
 .verification-options {
     display: flex;
     gap: 20px;
@@ -174,7 +167,6 @@ table tbody tr td[style*="text-align:center"] {
     font-size: 12px;
 }
 
-/* Verification Content */
 .verification-content {
     background: #f8f9fa;
     padding: 20px;
@@ -187,7 +179,6 @@ table tbody tr td[style*="text-align:center"] {
     color: #333;
 }
 
-/* Result Messages */
 .success {
     background: #d4edda;
     color: #155724;
@@ -204,7 +195,6 @@ table tbody tr td[style*="text-align:center"] {
     border: 1px solid #f5c6cb;
 }
 
-/* Responsive */
 @media (max-width: 768px) {
     .verification-options {
         flex-direction: column;

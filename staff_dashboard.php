@@ -100,7 +100,7 @@ if ($result && $result->num_rows > 0) {
         </div>
 
         <div class="content" id="dashboard">
-             <h2>Welcome, <strong><?= htmlspecialchars($username); ?></strong></h2>
+            <h2>Welcome, <strong><?= htmlspecialchars($username); ?></strong></h2>
             <p>
                 This dashboard allows you to process senior citizen discounts and manage transactions.
             </p>
@@ -114,21 +114,21 @@ if ($result && $result->num_rows > 0) {
                     <i class="fas fa-money-bill-wave"></i>
                     <div>
                         <h3>PHP 0.00</h3>
-                        <p>Today's Sales</p>
+                        <p>Today's Given Discount</p>
                     </div>
                 </div>
                 <div class="card">
                     <i class="fas fa-gift"></i>
                     <div>
                         <h3>PHP 0.00</h3>
-                        <p>Discounts Given</p>
+                        <p>Total Discounts Given</p>
                     </div>
                 </div>
                 <div class="card">
                     <i class="fas fa-users"></i>
                     <div>
                         <h3><?php echo $total_senior; ?></h3>
-                        <p>Seniors Served</p>
+                        <p>Total Senior</p>
                     </div>
                 </div>
                 <div class="card">
@@ -143,13 +143,14 @@ if ($result && $result->num_rows > 0) {
 
         <div class="content" id="process">
             <h2>Process Senior Discount</h2>
-            
+
             <div class="discount-form-section">
                 <h3>Enter Discount Amount</h3>
                 <form id="discountForm">
                     <div class="form-group">
                         <label for="discountAmount">Discount Amount (PHP)</label>
-                        <input type="number" id="discountAmount" name="discountAmount" placeholder="Enter discount amount" min="0" step="0.01" required>
+                        <input type="number" id="discountAmount" name="discountAmount"
+                            placeholder="Enter discount amount" min="0" step="0.01" required>
                         <small>Mininum: PHP 50.00</small>
                     </div>
                     <button type="submit" class="btn-primary">Proceed</button>
@@ -159,7 +160,7 @@ if ($result && $result->num_rows > 0) {
             <div id="verificationSection" style="display:none;">
                 <h3>Verification Type</h3>
                 <p>Who is claiming the discount?</p>
-                
+
                 <div class="verification-options">
                     <button id="btnSeniorVerify" class="verification-btn">
                         <i class="fas fa-user"></i>
@@ -176,43 +177,49 @@ if ($result && $result->num_rows > 0) {
                     <form id="seniorVerifyForm">
                         <div class="form-group">
                             <label for="seniorFullName">Senior Citizen Name</label>
-                            <input type="text" id="seniorFullName" name="seniorFullName" placeholder="Enter senior citizen full name" required>
+                            <input type="text" id="seniorFullName" name="seniorFullName"
+                                placeholder="Enter senior citizen full name" required>
                         </div>
                         <div class="verification-content">
                             <p>Please have the senior citizen scan their fingerprint for verification.</p>
                             <button type="button" id="btnStartFingerprint" class="btn-scan">
                                 <i class="fas fa-fingerprint"></i> Start Fingerprint Scan
                             </button>
-                            <div id="fingerprintResult" style="display:none; margin-top:15px; padding:15px; border-radius:5px;"></div>
+                            <div id="fingerprintResult"
+                                style="display:none; margin-top:15px; padding:15px; border-radius:5px;"></div>
                         </div>
                     </form>
                 </div>
 
                 <div id="guardianVerificationSection" style="display:none; margin-top:30px;">
-                    <h3>Guardian Information Verification</h3>
+                    <h3>Contact Person Information Verification</h3><br>
                     <form id="guardianForm">
                         <div class="form-group">
-                            <label for="guardianName">Guardian Name</label>
-                            <input type="text" id="guardianName" name="guardianName" placeholder="Enter guardian full name" required>
+                            <label for="guardianName">Contact Person Name</label>
+                            <input type="text" id="guardianName" name="guardianName"
+                                placeholder="Enter guardian full name" required>
                         </div>
                         <div class="form-group">
-                            <label for="guardianContact">Guardian Contact Number</label>
-                            <input type="tel" id="guardianContact" name="guardianContact" placeholder="Enter contact number" required>
+                            <label for="guardianContact">Contact Person Number</label>
+                            <input type="tel" id="guardianContact" name="guardianContact"
+                                placeholder="Enter contact number" required>
                         </div>
                         <div class="form-group">
                             <label for="seniorName">Senior Citizen Name</label>
-                            <input type="text" id="seniorName" name="seniorName" placeholder="Enter senior citizen name" required>
+                            <input type="text" id="seniorName" name="seniorName" placeholder="Enter senior citizen name"
+                                required>
                         </div>
                         <div class="form-group">
                             <label for="relationship">Relationship to Senior</label>
                             <select id="relationship" name="relationship" required>
-                                <option value="">Select relationship</option>
-                                <option value="Son/Daughter">Son/Daughter</option>
+                                <option value="">Choose Relation to Senior</option>
                                 <option value="Spouse">Spouse</option>
-                                <option value="Grandchild">Grandchild</option>
+                                <option value="Parent">Parent</option>
+                                <option value="Child">Child</option>
                                 <option value="Sibling">Sibling</option>
-                                <option value="Caregiver">Caregiver</option>
-                                <option value="Other">Other</option>
+                                <option value="Grandparent">Grandparent</option>
+                                <option value="Aunt/Uncle">Aunt/Uncle</option>
+                                <option value="Cousin">Cousin</option>
                             </select>
                         </div>
                         <button type="submit" class="btn-primary">Verify Guardian & Process Discount</button>
@@ -256,87 +263,10 @@ if ($result && $result->num_rows > 0) {
     </div>
 
     <script src="assets/script/admin_dashboard.js"></script>
-    <script>
-        // Discount Form Logic
-        const discountForm = document.getElementById('discountForm');
-        const verificationSection = document.getElementById('verificationSection');
-        const btnSeniorVerify = document.getElementById('btnSeniorVerify');
-        const btnGuardianVerify = document.getElementById('btnGuardianVerify');
-        const btnBackToForm = document.getElementById('btnBackToForm');
-        const seniorVerificationSection = document.getElementById('seniorVerificationSection');
-        const guardianVerificationSection = document.getElementById('guardianVerificationSection');
-        const btnStartFingerprint = document.getElementById('btnStartFingerprint');
-        const guardianForm = document.getElementById('guardianForm');
+    <script src="assets/script/staff_dashboard.js"></script>
+</body>
 
-        let currentDiscount = 0;
-
-        // Step 1: Submit discount amount
-        discountForm.addEventListener('submit', (e) => {
-            e.preventDefault();
-            currentDiscount = parseFloat(document.getElementById('discountAmount').value);
-            
-            if (currentDiscount > 125.00) {
-                alert('Discount exceeds weekly cap of PHP 125.00');
-                return;
-            }
-            
-            discountForm.parentElement.style.display = 'none';
-            verificationSection.style.display = 'block';
-        });
-
-        // Step 2: Choose verification type
-        btnSeniorVerify.addEventListener('click', () => {
-            seniorVerificationSection.style.display = 'block';
-            guardianVerificationSection.style.display = 'none';
-        });
-
-        btnGuardianVerify.addEventListener('click', () => {
-            guardianVerificationSection.style.display = 'block';
-            seniorVerificationSection.style.display = 'none';
-        });
-
-        // Step 3: Back button
-        btnBackToForm.addEventListener('click', () => {
-            discountForm.parentElement.style.display = 'block';
-            verificationSection.style.display = 'none';
-            seniorVerificationSection.style.display = 'none';
-            guardianVerificationSection.style.display = 'none';
-            discountForm.reset();
-        });
-
-        // Step 4: Fingerprint verification
-        btnStartFingerprint.addEventListener('click', () => {
-            const seniorName = document.getElementById('seniorFullName').value;
-            
-            if (!seniorName.trim()) {
-                alert('Please enter the senior citizen name');
-                return;
-            }
-            
-            alert('Fingerprint scan initiated. (Integration with biometric hardware needed)');
-            // TODO: Integrate with actual fingerprint scanner API
-            const resultDiv = document.getElementById('fingerprintResult');
-            resultDiv.style.display = 'block';
-            resultDiv.className = 'success';
-            resultDiv.innerHTML = '<strong>✓ Fingerprint Verified</strong><br>Senior: ' + seniorName + '<br>Discount: PHP ' + currentDiscount.toFixed(2);
-            
-            setTimeout(() => {
-                alert('Discount of PHP ' + currentDiscount.toFixed(2) + ' applied successfully to ' + seniorName + '!');
-                btnBackToForm.click();
-            }, 2000);
-        });
-
-        // Step 5: Guardian verification
-        guardianForm.addEventListener('submit', (e) => {
-            e.preventDefault();
-            
-            const guardianName = document.getElementById('guardianName').value;
-            const seniorName = document.getElementById('seniorName').value;
-            
-            alert('Guardian Information Verified:\n\nGuardian: ' + guardianName + '\nSenior: ' + seniorName + '\n\nDiscount of PHP ' + currentDiscount.toFixed(2) + ' applied successfully!');
-            
-            // TODO: Send data to backend for processing
-            guardianForm.reset();
-            btnBackToForm.click();
-        });
-    </script>
+</html>
+<?php
+$conn->close();
+?>

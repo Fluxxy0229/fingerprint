@@ -16,10 +16,14 @@ include '../../dbconn.php';
 $full_name = trim($_POST['full_name'] ?? '');
 $age = isset($_POST['age']) ? (int) $_POST['age'] : null;
 $address = trim($_POST['address'] ?? '');
-$contact = trim($_POST['contact'] ?? '');
-$dob = trim($_POST['birthdate'] ?? '');
+$contact_number = trim($_POST['contact_number'] ?? '');
+$birthdate = trim($_POST['birthdate'] ?? '');
 $gender = trim($_POST['gender'] ?? '');
 $civil_status = trim($_POST['civil_status'] ?? '');
+
+$contact_person = trim($_POST['contact_person'] ?? null);
+$contact_person_number = trim($_POST['contact_person_number'] ?? null);
+$contact_person_relation = trim($_POST['contact_person_relation'] ?? '');
 
 $errors = [];
 if ($full_name === '') {
@@ -31,6 +35,21 @@ if ($age === null || $age <= 0) {
 if ($address === '') {
 	$errors[] = 'Address is required.';
 }
+if ($contact_number === '') {
+	$errors[] = 'Contact number is required.';
+}
+if ($birthdate === '') {
+	$errors[] = 'Birth date is required.';
+}
+if ($gender === '') {
+	$errors[] = 'Gender is required.';
+}
+if ($civil_status === '') {
+	$errors[] = 'Civil status is required.';
+}
+if ($contact_person_relation === '') {
+	$errors[] = 'Emergency contact relation is required.';
+}
 
 if (!empty($errors)) {
 	$msg = urlencode(implode(' ', $errors));
@@ -38,37 +57,55 @@ if (!empty($errors)) {
 	exit();
 }
 
-$columns = ['full_name', 'age', 'address', 'contact_number', 'gender', 'civil_status'];
-$values = [$full_name, $age, $address, $contact, $gender, $civil_status];
+$columns = [
+	'full_name',
+	'age',
+	'address',
+	'contact_number',
+	'birthdate',
+	'gender',
+	'civil_status',
+	'contact_person',
+	'contact_person_number',
+	'contact_person_relation',
+	'senior_biometric_data'
+];
 
-$birthdate = trim($_POST['birthdate'] ?? '');
-
-$possibleDobCols = ['birthdate', 'birtdate', 'dob'];
-foreach ($possibleDobCols as $col) {
-	$res = $conn->query("SHOW COLUMNS FROM senior_list LIKE '" . $conn->real_escape_string($col) . "'");
-	if ($res && $res->num_rows > 0) {
-		$columns[] = $col;
-		$values[] = ($birthdate === '' ? null : $birthdate);
-		break;
-	}
-}
+$values = [
+	$full_name,
+	$age,
+	$address,
+	$contact_number,
+	$birthdate === '' ? null : $birthdate,
+	$gender,
+	$civil_status,
+	$contact_person === '' ? null : $contact_person,
+	$contact_person_number === '' ? null : $contact_person_number,
+	$contact_person_relation,
+	0
+];
 
 $placeholders = implode(', ', array_fill(0, count($columns), '?'));
 $sql = "INSERT INTO senior_list (" . implode(', ', $columns) . ") VALUES (" . $placeholders . ")";
+
 if ($stmt = $conn->prepare($sql)) {
 	$types = '';
 	foreach ($columns as $col) {
-		$types .= ($col === 'age') ? 'i' : 's';
+		if ($col === 'age' || $col === 'senior_biometric_data') {
+			$types .= 'i';
+		} else {
+			$types .= 's';
+		}
 	}
 
-	$bindParams[] = & $types;
+	$bindParams = [&$types];
 	for ($i = 0; $i < count($values); $i++) {
-		$bindParams[] = & $values[$i];
+		$bindParams[] = &$values[$i];
 	}
 
 	call_user_func_array([$stmt, 'bind_param'], $bindParams);
-	$ok = $stmt->execute();
-	if ($ok) {
+	
+	if ($stmt->execute()) {
 		$newSeniorId = $conn->insert_id;
 		$stmt->close();
 
@@ -89,22 +126,16 @@ if ($stmt = $conn->prepare($sql)) {
 		header('Location: ../../admin_dashboard.php?added=1');
 		exit();
 	} else {
-		$err = urlencode('Insert failed');
+		$err = urlencode('Insert failed: ' . $stmt->error);
 		$stmt->close();
 		$conn->close();
 		header("Location: ../../admin_dashboard.php?error={$err}");
 		exit();
 	}
 } else {
-	$err = urlencode('Prepare failed');
-	if (isset($_GET['debug']) && $_GET['debug']) {
-		header('Content-Type: application/json');
-		echo json_encode(['error' => 'prepare_failed', 'message' => $conn->error, 'sql' => $sql]);
-		exit();
-	}
+	$err = urlencode('Prepare failed: ' . $conn->error);
+	$conn->close();
 	header("Location: ../../admin_dashboard.php?error={$err}");
 	exit();
 }
-
 ?>
-
