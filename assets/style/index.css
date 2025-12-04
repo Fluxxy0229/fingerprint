@@ -1,0 +1,203 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Poppins", Arial, sans-serif;
+}
+body {
+  background-image: url("../images/bg.webp");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  color: #222;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  padding-top: 90px;
+  flex-direction: column;
+}
+.header {
+  width: 100%;
+  padding: 15px 40px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #710117;
+  box-shadow: 0 2px 7px rgba(0, 0, 0, 0.1);
+  position: fixed;
+  top: 0;
+  z-index: 10;
+}
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.logo img {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+}
+.logo h3 {
+  font-size: 22px;
+  font-weight: 600;
+  color: #fff;
+}
+.login-btn button {
+  padding: 10px 20px;
+  font-size: 15px;
+  border: none;
+  background: #ff0000;
+  color: #fff;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: 0.3s;
+  font-weight: bold;
+}
+.login-btn button:hover {
+  background: #c80000;
+}
+.main {
+  text-align: center;
+  padding: 50px 30px;
+  display: flex;
+  flex-direction: column;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  max-width: 600px;
+  margin: auto;
+}
+.main h2 {
+  font-size: 36px;
+  margin-bottom: 3px;
+  color: #064f2f;
+  font-weight: bolder;
+}
+.main h3 {
+  font-size: 20px;
+  color: #fff;
+  margin-bottom: 15px;
+}
+.main p {
+  max-width: 600px;
+  margin: auto;
+  color: #fff;
+  font-size: 15px;
+}
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 999;
+  padding-top: 80px;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(2px);
+}
+.modal-content {
+  background: white;
+  width: 90%;
+  max-width: 350px;
+  margin: auto;
+  border-radius: 12px;
+  padding: 20px 25px 30px 25px;
+  position: relative;
+  animation: zoomIn 0.4s;
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+}
+.close {
+  position: absolute;
+  top: 12px;
+  right: 15px;
+  font-size: 28px;
+  cursor: pointer;
+  color: #444;
+}
+.close:hover {
+  color: red;
+}
+.modal h2 {
+  text-align: center;
+  margin-bottom: 20px;
+}
+.modal input[type="text"],
+.modal input[type="password"] {
+  width: 100%;
+  padding: 12px;
+  margin-top: 10px;
+  margin-bottom: 15px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  outline: none;
+}
+.modal button {
+  width: 100%;
+  margin-top: 20px;
+  padding: 12px;
+  background: #0a8a4a;
+  border: none;
+  color: white;
+  font-size: 16px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+.modal button:hover {
+  background: #056834;
+}
+.extras {
+  margin-top: 10px;
+  display: flex;
+  justify-content: space-between;
+  font-size: 13px;
+}
+.extras a {
+  text-decoration: none;
+  color: #0a8a4a;
+}
+.extras a:hover {
+  text-decoration: underline;
+}
+.login-error {
+  color: #fff;
+  background: rgba(220, 38, 38, 0.9);
+  padding: 8px 12px;
+  border-radius: 8px;
+  margin-bottom: 12px;
+  font-size: 14px;
+}
+@keyframes zoomIn {
+  from {
+    transform: scale(0.6);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+@media (max-width: 600px) {
+  .header {
+    padding: 12px 20px;
+  }
+  .logo h3 {
+    font-size: 18px;
+  }
+  .main h2 {
+    font-size: 28px;
+  }
+  .main h3 {
+    font-size: 17px;
+  }
+  .main p {
+    font-size: 14px;
+    padding: 0 15px;
+  }
+}
