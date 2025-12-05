@@ -27,23 +27,38 @@ if ($result && $row = $result->fetch_assoc()) {
     $total_senior = $row['count'] ?? 0;
 }
 
-$new_seniors_today = 0;
-$result = $conn->query("SELECT COUNT(*) as count FROM senior_list WHERE DATE(created_at) = CURDATE()");
+$today_discount = 0.00;
+$result = $conn->query("SELECT SUM(discount_amount) as total FROM applied_discounts WHERE DATE(applied_at) = CURDATE()");
 if ($result && $row = $result->fetch_assoc()) {
-    $new_seniors_today = $row['count'] ?? 0;
+    $today_discount = $row['total'] ?? 0.00;
+}
+
+$total_discount = 0.00;
+$result = $conn->query("SELECT SUM(discount_amount) as total FROM applied_discounts");
+if ($result && $row = $result->fetch_assoc()) {
+    $total_discount = $row['total'] ?? 0.00;
+}
+
+$total_transactions = 0;
+$result = $conn->query("SELECT COUNT(*) as count FROM applied_discounts");
+if ($result && $row = $result->fetch_assoc()) {
+    $total_transactions = $row['count'] ?? 0;
 }
 
 $recentActivities = [];
 $sql = "
   SELECT
-    id,
-    username,
-    COALESCE(details,
-      CONCAT(COALESCE(username, 'Staff'), ' ', action)
+    ua.id,
+    COALESCE(u.role, 'Staff') AS role,
+    ua.username,
+    ua.action,
+    COALESCE(ua.details,
+      CONCAT(COALESCE(ua.username, 'Staff'), ' ', ua.action)
     ) AS activity,
-    created_at AS timestamp
-  FROM user_activities
-  ORDER BY created_at DESC
+    ua.created_at AS timestamp
+  FROM user_activities ua
+  LEFT JOIN users u ON ua.user_id = u.id
+  ORDER BY ua.created_at DESC
   LIMIT 5
 ";
 $result = $conn->query($sql);
@@ -113,14 +128,14 @@ if ($result && $result->num_rows > 0) {
                 <div class="card">
                     <i class="fas fa-money-bill-wave"></i>
                     <div>
-                        <h3>PHP 0.00</h3>
+                        <h3>PHP <?php echo number_format($today_discount, 2); ?></h3>
                         <p>Today's Given Discount</p>
                     </div>
                 </div>
                 <div class="card">
                     <i class="fas fa-gift"></i>
                     <div>
-                        <h3>PHP 0.00</h3>
+                        <h3>PHP <?php echo number_format($total_discount, 2); ?></h3>
                         <p>Total Discounts Given</p>
                     </div>
                 </div>
@@ -134,7 +149,7 @@ if ($result && $result->num_rows > 0) {
                 <div class="card">
                     <i class="fas fa-file-invoice"></i>
                     <div>
-                        <h3>0</h3>
+                        <h3><?php echo $total_transactions; ?></h3>
                         <p>Transactions</p>
                     </div>
                 </div>
@@ -247,7 +262,13 @@ if ($result && $result->num_rows > 0) {
                         <?php if (!empty($recentActivities)): ?>
                         <?php foreach ($recentActivities as $activity): ?>
                         <tr>
-                            <td><?= htmlspecialchars($activity['activity']); ?></td>
+                            <td><?php
+                                $activityText = htmlspecialchars($activity['activity']);
+                                if (strpos($activityText, 'Applied discount') === 0) {
+                                    $activityText = str_replace('Applied discount', 'a discount', $activityText);
+                                }
+                                echo htmlspecialchars($activity['role']) . ' ' . ($activity['action'] === 'add_senior' ? 'added' : 'applied') . ' ' . $activityText;
+                            ?></td>
                             <td><?= date('F d, Y', strtotime($activity['timestamp'])) ?></td>
                         </tr>
                         <?php endforeach; ?>

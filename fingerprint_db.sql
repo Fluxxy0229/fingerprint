@@ -12,6 +12,7 @@ CREATE TABLE `senior_list` (
   `contact_person_relation` enum('Spouse','Parent','Child','Sibling','Grandparent','Aunt/Uncle','Cousin') NOT NULL,
   `senior_biometric_data` boolean NOT NULL DEFAULT 0,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -39,4 +40,19 @@ CREATE TABLE `user_activities` (
   CONSTRAINT `fk_user_activity_user`
     FOREIGN KEY (`user_id`) REFERENCES `users`(`id`)
     ON DELETE SET NULL ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+ALTER TABLE user_activities MODIFY created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP;
+
+CREATE TABLE `applied_discounts` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `senior_name` varchar(100) NOT NULL,
+  `discount_amount` decimal(10,2) NOT NULL,
+  `verification_type` enum('Fingerprint','Guardian') NOT NULL,
+  `staff_id` int(11) DEFAULT NULL,
+  `staff_username` varchar(50) DEFAULT NULL,
+  `applied_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  PRIMARY KEY (`id`),
+  KEY `fk_applied_discount_staff` (`staff_id`),
+  CONSTRAINT `fk_applied_discount_staff` FOREIGN KEY (`staff_id`) REFERENCES `users`(`id`) ON DELETE SET NULL ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;

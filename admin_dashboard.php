@@ -28,12 +28,17 @@ if ($result && $row = $result->fetch_assoc()) {
 $recentActivities = [];
 $sql = "
   SELECT
-    COALESCE(details,
-      CONCAT(COALESCE(username, 'Admin'), ' ', action)
+    ua.id,
+    COALESCE(u.role, 'Admin') AS role,
+    ua.username,
+    ua.action,
+    COALESCE(ua.details,
+      CONCAT(COALESCE(ua.username, 'Admin'), ' ', ua.action)
     ) AS activity,
-    created_at AS timestamp
-  FROM user_activities
-  ORDER BY created_at DESC
+    ua.created_at AS timestamp
+  FROM user_activities ua
+  LEFT JOIN users u ON ua.user_id = u.id
+  ORDER BY ua.created_at DESC
   LIMIT 5
 ";
 $result = $conn->query($sql);
@@ -129,7 +134,7 @@ if ($result && $result->num_rows > 0) {
                         <?php if (!empty($recentActivities)): ?>
                         <?php foreach ($recentActivities as $activity): ?>
                         <tr>
-                            <td>Admin added <?= htmlspecialchars($activity['activity']); ?></td>
+                            <td><?= htmlspecialchars($activity['role']) ?> <?= $activity['action'] === 'add_senior' ? 'added' : 'applied' ?> <?= htmlspecialchars($activity['activity']); ?></td>
                             <td><?= date('F d, Y', strtotime($activity['timestamp'])) ?></td>
                         </tr>
                         <?php endforeach; ?>
@@ -187,6 +192,8 @@ if ($result && $result->num_rows > 0) {
                         <option value="Cousin">Cousin</option>
                     </select>
                 </fieldset>
+
+                <input type="hidden" name="senior_biometric_data" id="seniorBiometricData" value="0" />
 
                 <button type="button" id="enrollBio">Register Fingerprint</button>
 
